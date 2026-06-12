@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あそびの間 — 星刻みの遊び場</title>
+<style>
+  :root {
+    --accent-amber: #f0c050; --accent-amber-dim: rgba(240,192,80,0.4);
+    --text-main: #e8e4f0; --text-dim: #8a86a0; --border-gate: rgba(140,130,180,0.22);
+    --font-jp: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+    --font-serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #07060f 0%, #0d0b1d 55%, #141022 100%);
+    background-attachment: fixed;
+    color: var(--text-main); font-family: var(--font-jp);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap { max-width: 480px; margin: 0 auto; padding: 3rem 1.3rem 4rem; }
+  h1 {
+    font-family: var(--font-serif); font-weight: 500; font-size: 2rem;
+    letter-spacing: 0.3em; text-indent: 0.3em; text-align: center;
+    text-shadow: 0 0 22px rgba(240,192,80,0.3); margin-bottom: 0.5rem;
+  }
+  .lead { text-align: center; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.18em; margin-bottom: 2.8rem; }
+
+  h2 {
+    font-family: var(--font-serif); font-weight: 500; font-size: 0.85rem;
+    color: var(--accent-amber); letter-spacing: 0.2em;
+    margin: 2.2rem 0 0.9rem; padding-left: 0.2rem;
+  }
+  h2 small { color: var(--text-dim); font-family: var(--font-jp); font-size: 0.62rem; margin-left: 0.7em; letter-spacing: 0.1em; }
+
+  a.card {
+    display: block; text-decoration: none; color: inherit;
+    background: rgba(12,10,20,0.6); border: 1px solid var(--border-gate); border-radius: 12px;
+    padding: 0.95rem 1.1rem; margin-bottom: 0.55rem;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  a.card:hover, a.card:active { border-color: var(--accent-amber-dim); background: rgba(240,192,80,0.06); }
+  .card .t { font-family: var(--font-serif); font-size: 1rem; letter-spacing: 0.12em; margin-bottom: 0.25rem; }
+  .card .t span { color: var(--accent-amber); margin-right: 0.5em; }
+  .card .d { font-size: 0.7rem; color: var(--text-dim); line-height: 1.7; }
+
+  footer { text-align: center; margin-top: 3rem; font-size: 0.64rem; color: rgba(138,134,160,0.6); letter-spacing: 0.15em; line-height: 2; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>あそびの間</h1>
+  <p class="lead">― 星刻みの夜にひらいた、ちいさな遊び場 ―</p>
+
+  <h2>夜ほどきの間</h2>
+  <a class="card" href="games/hoshihodoki.html">
+    <div class="t"><span>✦</span>星ほどき</div>
+    <div class="d">もつれた星座の糸を、星をうごかしてほどくパズル。すべてほどけたら星座が灯る。</div>
+  </a>
+
+  <h2>ちからだめしの三夜 <small>頭の良さ、測ってみる？</small></h2>
+  <a class="card" href="games/hoshi-no-kioku.html">
+    <div class="t"><span>✦</span>星の記憶</div>
+    <div class="d">光る星の順番を、そのままなぞる。何個までおぼえていられるか — 記憶スパンの測定。</div>
+  </a>
+  <a class="card" href="games/kotoba-no-wana.html">
+    <div class="t"><span>✦</span>言葉の罠</div>
+    <div class="d">「あお」と書かれた赤い文字。読まずに、色だけを選べるか — ストループ課題。</div>
+  </a>
+  <a class="card" href="games/futatsumae-no-hoshi.html">
+    <div class="t"><span>✦</span>ふたつまえの星</div>
+    <div class="d">いま光った場所は、ふたつ前とおなじ？ — 研究でも使われる 2-back 課題。</div>
+  </a>
+
+  <h2>ときのとける遊び <small>気づいたら朝、の二つ</small></h2>
+  <a class="card" href="games/hoshiawase.html">
+    <div class="t"><span>✦</span>星合わせ</div>
+    <div class="d">おなじ星をかさねて育てる。星屑から月、彗星、そして銀河へ。</div>
+  </a>
+  <a class="card" href="games/hoshizumi.html">
+    <div class="t"><span>✦</span>星積み</div>
+    <div class="d">流れる光の板をタップでとめて、空へ積み上げる。ぴったり重なれば痩せない。</div>
+  </a>
+
+  <h2>ちいさな子のための <small>0〜2歳・しずかな設計</small></h2>
+  <a class="card" href="games/hoshi-no-osanpo.html">
+    <div class="t"><span>✦</span>ほしのおさんぽ</div>
+    <div class="d">タッチすると、星やおはなが「ぽん」と咲いて空へ。点数なし、8分でおやすみの合図。</div>
+  </a>
+
+  <footer>
+    どの遊びも、ファイルひとつで動きます。<br>
+    ― 星刻みの保管庫・離れ ―
+  </footer>
+</div>
+</body>
+</html>
