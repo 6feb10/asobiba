@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>☆†ゆめかわMoon†☆～BBS～</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page-body">
+
+<h1 class="header-title rainbow">★ゲストブック★</h1>
+<p class="header-sub">～足あと残していってね♪　誹謗中傷は削除します(｀・ω・´)～</p>
+
+<nav class="navbar">
+  <a href="home.html">☆TOP☆</a>｜
+  <a href="profile.html">†プロフ†</a>｜
+  <a href="diary.html">♪日記♪</a>｜
+  <a href="bbs.html">★BBS★</a>｜
+  <a href="links.html">♡リンク♡</a>
+</nav>
+
+<div class="box">
+  <h2>☆カキコする☆</h2>
+  <form class="bbs-form" id="bbs-form">
+    <p>おなまえ：<br><input type="text" id="bbs-name" maxlength="20" placeholder="名無しさんはダメだよ☆"></p>
+    <p>メッセージ：<br><textarea id="bbs-msg" rows="4" maxlength="500" placeholder="キリ番報告・相互リンク希望もこちらへ♪"></textarea></p>
+    <p>顔文字スタンプ：
+      <button type="button" class="kao-btn" data-kao="(●´ω｀●)">(●´ω｀●)</button>
+      <button type="button" class="kao-btn" data-kao="(*´∇｀*)">(*´∇｀*)</button>
+      <button type="button" class="kao-btn" data-kao="(>_<)">(>_&lt;)</button>
+      <button type="button" class="kao-btn" data-kao="ｷﾀ━(ﾟ∀ﾟ)━!!">ｷﾀ━(ﾟ∀ﾟ)━!!</button>
+      <button type="button" class="kao-btn" data-kao="(´；ω；｀)">(´；ω；｀)</button>
+    </p>
+    <p style="text-align:center;"><button type="submit">☆カキコ☆</button></p>
+  </form>
+  <p class="small">※このBBSはあなたのブラウザにだけ保存されるよ（なんちゃってCGI）</p>
+</div>
+
+<div class="box box-cyan">
+  <h2>★みんなのカキコ★</h2>
+  <div id="bbs-posts"></div>
+</div>
+
+<p class="deco-line">＊。･ﾟ★｡･＊ﾟ☆ﾟ＊｡･ﾟ★｡･＊ﾟ☆ﾟ＊｡</p>
+
+<footer>
+Copyright(C) 2004 みゅう☆ All Rights Reserved.<br>
+<span class="small">レンタルBBS：なんちゃってCGI様</span>
+</footer>
+
+</div>
+<script src="js/kirakira.js"></script>
+<script src="js/bbs.js"></script>
+</body>
+</html>

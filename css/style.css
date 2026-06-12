@@ -1,0 +1,265 @@
+/* ☆†ゆめかわMoon†☆ すたいるしーと */
+/* 平成16年っぽいキラキラを全力で再現 */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "ＭＳ Ｐゴシック", "MS PGothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #ff66aa;
+  background-color: #000;
+  /* 星空タイル背景（GIFの代わりにCSSで） */
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 60px 80px, #ffccee, transparent),
+    radial-gradient(2px 2px at 100px 40px, #aaddff, transparent),
+    radial-gradient(1px 1px at 140px 110px, #fff, transparent),
+    radial-gradient(2px 2px at 40px 130px, #ffff99, transparent),
+    radial-gradient(1px 1px at 110px 150px, #ffccee, transparent);
+  background-size: 160px 160px;
+  cursor: crosshair;
+}
+
+a { color: #66ffff; }
+a:hover { color: #ffff66; text-decoration: none; }
+a.plain-link { color: #9999cc; }
+
+.small { font-size: 10px; color: #cc99ff; }
+
+/* キラキラ虹色テキスト */
+.rainbow {
+  background: linear-gradient(90deg,
+    #ff99cc, #ffcc99, #ffff99, #99ffcc, #99ccff, #cc99ff, #ff99cc);
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow-flow 3s linear infinite;
+  text-shadow: none;
+}
+@keyframes rainbow-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 400% 50%; }
+}
+
+/* blinkタグ亡き今、CSSで点滅させる */
+.blink { animation: blink 0.7s step-start infinite; }
+.blink-slow { animation: blink 1.4s step-start infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ===== 入口ページ ===== */
+.entrance { text-align: center; }
+.entrance-box {
+  max-width: 560px;
+  margin: 30px auto;
+  padding: 20px;
+}
+.jponly { color: #ff99cc; letter-spacing: 1px; margin: 2px 0; }
+.site-title {
+  font-size: 36px;
+  margin: 24px 0 4px;
+  filter: drop-shadow(0 0 6px #ff99cc);
+}
+.subtitle { color: #ffccee; margin-top: 0; }
+.welcome-marquee {
+  display: block;
+  color: #ffff99;
+  border-top: 1px dashed #ff99cc;
+  border-bottom: 1px dashed #ff99cc;
+  padding: 4px 0;
+  margin: 16px 0;
+}
+.counter-box {
+  border: 2px ridge #ff99cc;
+  background: rgba(50, 0, 40, 0.8);
+  padding: 10px;
+  margin: 16px auto;
+  width: 300px;
+}
+.counter {
+  font-family: "Courier New", monospace;
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: #33ff33;
+  background: #000;
+  border: 2px inset #666;
+  display: inline-block;
+  padding: 2px 12px;
+  margin: 4px 0;
+}
+.warning-box {
+  border: 2px dotted #66ffff;
+  background: rgba(0, 30, 50, 0.7);
+  padding: 10px;
+  margin: 16px auto;
+  width: 360px;
+  max-width: 100%;
+  color: #ccffff;
+  text-align: left;
+}
+.warning-box .blink { text-align: center; color: #ff6699; }
+.enter-link { margin: 30px 0 10px; }
+.enter {
+  font-size: 26px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.since { color: #9966cc; font-size: 10px; margin-top: 40px; }
+
+/* ===== 中のページ共通 ===== */
+.page-body {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px;
+}
+.header-title {
+  text-align: center;
+  font-size: 28px;
+  margin: 10px 0 0;
+  filter: drop-shadow(0 0 5px #ff99cc);
+}
+.header-sub { text-align: center; color: #ffccee; margin: 0 0 10px; font-size: 11px; }
+
+.navbar {
+  text-align: center;
+  border-top: 2px ridge #cc66ff;
+  border-bottom: 2px ridge #cc66ff;
+  background: rgba(40, 0, 60, 0.8);
+  padding: 6px 0;
+  margin-bottom: 14px;
+}
+.navbar a {
+  margin: 0 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.main-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 8px;
+}
+.main-table td { vertical-align: top; }
+.side-col { width: 170px; }
+
+.box {
+  border: 2px ridge #ff99cc;
+  background: rgba(40, 0, 35, 0.85);
+  padding: 10px;
+  margin-bottom: 12px;
+}
+.box h2 {
+  font-size: 13px;
+  margin: -10px -10px 8px;
+  padding: 4px 8px;
+  background: linear-gradient(90deg, #ff99cc, #cc99ff, #99ccff);
+  color: #660033;
+  text-align: center;
+}
+.box-cyan { border-color: #66ffff; }
+.box-cyan h2 { background: linear-gradient(90deg, #99ffff, #99ccff, #cc99ff); color: #003355; }
+.box-yellow { border-color: #ffff99; }
+.box-yellow h2 { background: linear-gradient(90deg, #ffff99, #ffcc99, #ff99cc); color: #553300; }
+
+.update-list { color: #ffffff; }
+.update-list .date { color: #ffff99; }
+.new { color: #ff3366; font-weight: bold; font-size: 10px; animation: blink 0.7s step-start infinite; }
+
+.bgm-note { text-align: center; color: #99ff99; font-size: 11px; }
+
+.banner {
+  display: inline-block;
+  width: 88px;
+  height: 31px;
+  line-height: 31px;
+  text-align: center;
+  font-size: 10px;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(135deg, #ff66aa, #9933cc);
+  border: 1px outset #ffccee;
+  animation: rainbow-banner 4s linear infinite;
+}
+@keyframes rainbow-banner {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.deco-line { text-align: center; color: #ff99cc; letter-spacing: 2px; }
+
+/* プロフ表 */
+.prof-table { width: 100%; border-collapse: collapse; color: #ffeeff; }
+.prof-table th, .prof-table td {
+  border: 1px dotted #ff99cc;
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: normal;
+  font-size: 12px;
+}
+.prof-table th { width: 110px; color: #ffff99; background: rgba(255, 102, 170, 0.15); }
+
+/* 日記 */
+.diary-entry { border-bottom: 1px dashed #cc66ff; padding: 6px 0 10px; color: #ffeeff; }
+.diary-date { color: #66ffff; font-weight: bold; }
+.diary-title { color: #ffff99; }
+
+/* BBS */
+.bbs-form input[type="text"], .bbs-form textarea {
+  width: 100%;
+  background: #220022;
+  color: #ffccee;
+  border: 2px inset #996699;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px;
+}
+.bbs-form button, .kao-btn {
+  background: linear-gradient(180deg, #ffccee, #ff99cc);
+  border: 2px outset #ffccee;
+  color: #660033;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+.bbs-form button:active, .kao-btn:active { border-style: inset; }
+.bbs-post {
+  border: 1px solid #cc66ff;
+  background: rgba(60, 0, 60, 0.6);
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  color: #ffeeff;
+}
+.bbs-post .meta { font-size: 10px; color: #99ccff; }
+.bbs-post .name { color: #ffff99; font-weight: bold; }
+
+/* リンク集 */
+.link-item { color: #ffeeff; margin-bottom: 10px; }
+.link-item .desc { font-size: 11px; color: #cc99ff; }
+
+footer {
+  text-align: center;
+  font-size: 10px;
+  color: #9966cc;
+  margin: 20px 0;
+}
+
+/* マウスについてくるキラキラ */
+.sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 14px;
+  animation: sparkle-fall 1s ease-out forwards;
+}
+@keyframes sparkle-fall {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(40px) scale(0.3) rotate(180deg); }
+}
+
+/* 隠しページ */
+.secret-body { background-color: #110011; }
+.secret-title { color: #cc66ff; text-align: center; font-size: 24px; }
