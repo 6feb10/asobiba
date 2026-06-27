@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#ffb6c1" />
+<title>🍓 おやつキャッチ 🍓</title>
+<style>
+  :root {
+    --pink: #ff8fab;
+    --pink-dark: #e85d82;
+    --cream: #fff5f7;
+    --sky1: #ffd6e8;
+    --sky2: #c9f0ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+    background: linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 100%);
+    user-select: none;
+    touch-action: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 480px;
+    max-height: 100vh;
+    margin: 0 auto;
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffe3f1 0%, #d8f4ff 60%, #c2f5d8 100%);
+    box-shadow: 0 0 40px rgba(0,0,0,0.1);
+  }
+
+  /* ふわふわ雲 */
+  .cloud {
+    position: absolute;
+    font-size: 44px;
+    opacity: 0.85;
+    animation: drift linear infinite;
+    pointer-events: none;
+  }
+  @keyframes drift {
+    from { transform: translateX(-120px); }
+    to   { transform: translateX(540px); }
+  }
+
+  /* HUD */
+  #hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    font-weight: bold;
+    color: var(--pink-dark);
+    text-shadow: 0 2px 0 #fff;
+    z-index: 10;
+    font-size: 20px;
+  }
+  #hud .label { font-size: 13px; opacity: 0.8; }
+  .hearts { font-size: 22px; letter-spacing: 2px; }
+
+  /* 落ちてくるもの */
+  .item {
+    position: absolute;
+    font-size: 40px;
+    will-change: transform;
+    z-index: 5;
+    filter: drop-shadow(0 3px 2px rgba(0,0,0,0.15));
+  }
+
+  /* カゴ */
+  #basket {
+    position: absolute;
+    bottom: 14px;
+    font-size: 64px;
+    z-index: 8;
+    transform: translateX(-50%);
+    transition: transform 0.05s linear;
+    will-change: left;
+    filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
+  }
+
+  /* ポップ得点 */
+  .pop {
+    position: absolute;
+    font-weight: bold;
+    font-size: 22px;
+    z-index: 9;
+    pointer-events: none;
+    animation: popup 0.8s ease-out forwards;
+    text-shadow: 0 2px 0 #fff;
+  }
+  @keyframes popup {
+    0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+    20%  { transform: translateY(-6px) scale(1.2); opacity: 1; }
+    100% { transform: translateY(-46px) scale(1); opacity: 0; }
+  }
+
+  /* 画面（スタート / ゲームオーバー） */
+  .screen {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+    background: rgba(255, 245, 247, 0.92);
+    backdrop-filter: blur(3px);
+  }
+  .screen.hidden { display: none; }
+  .screen h1 {
+    font-size: 38px;
+    color: var(--pink-dark);
+    text-shadow: 0 3px 0 #fff, 0 6px 8px rgba(232,93,130,0.3);
+    margin-bottom: 6px;
+    animation: bob 1.6s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .screen p { color: #b5567a; font-size: 16px; line-height: 1.7; margin: 8px 0; }
+  .big-emoji { font-size: 72px; margin-bottom: 10px; animation: bob 2s ease-in-out infinite; }
+
+  button.play {
+    margin-top: 22px;
+    border: none;
+    background: linear-gradient(180deg, #ff9cb8, var(--pink-dark));
+    color: #fff;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 24px;
+    padding: 16px 44px;
+    border-radius: 40px;
+    box-shadow: 0 6px 0 #c44368, 0 10px 16px rgba(196,67,104,0.4);
+    cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.08s;
+  }
+  button.play:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #c44368, 0 4px 8px rgba(196,67,104,0.4);
+  }
+
+  .hint { font-size: 13px; color: #c98aa6; margin-top: 18px; }
+  #score-line { font-size: 20px; color: var(--pink-dark); font-weight: bold; }
+  #best-line { font-size: 14px; color: #c98aa6; margin-top: 4px; }
+
+  /* 画面シェイク */
+  @keyframes shake {
+    0%,100%{transform:translate(0,0)} 25%{transform:translate(-6px,2px)}
+    50%{transform:translate(5px,-2px)} 75%{transform:translate(-3px,1px)}
+  }
+  .shake { animation: shake 0.3s; }
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="hud">
+    <div><span class="label">スコア</span><br /><span id="score">0</span></div>
+    <div style="text-align:center"><span class="label">レベル</span><br /><span id="level">1</span></div>
+    <div style="text-align:right"><span class="label">ライフ</span><br /><span id="hearts" class="hearts">❤️❤️❤️</span></div>
+  </div>
+
+  <div id="basket">🧺</div>
+
+  <!-- スタート画面 -->
+  <div id="start" class="screen">
+    <div class="big-emoji">🍓🍰🍩</div>
+    <h1>おやつキャッチ</h1>
+    <p>おそらから おやつが ふってくるよ！<br />カゴで いっぱい キャッチしてね♪</p>
+    <p style="font-size:14px">⚠️ ばくだん 💣 は よけてね！</p>
+    <button class="play" id="startBtn">あそぶ！</button>
+    <div class="hint">▶ ゆびで うごかす / ← → キーでも あそべるよ</div>
+  </div>
+
+  <!-- ゲームオーバー画面 -->
+  <div id="over" class="screen hidden">
+    <div class="big-emoji" id="overEmoji">🥺</div>
+    <h1>おしまい！</h1>
+    <div id="score-line">スコア： 0</div>
+    <div id="best-line">ベスト： 0</div>
+    <p id="praise">よく がんばったね！</p>
+    <button class="play" id="againBtn">もういちど！</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const game    = document.getElementById("game");
+  const basket  = document.getElementById("basket");
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const heartsEl= document.getElementById("hearts");
+  const startScreen = document.getElementById("start");
+  const overScreen  = document.getElementById("over");
+  const startBtn = document.getElementById("startBtn");
+  const againBtn = document.getElementById("againBtn");
+
+  const GOODIES = ["🍓","🍰","🍩","🍪","🍭","🍫","🧁","🍦","🍮","🍬","🍒","🍑"];
+  const GOLD    = "⭐";
+  const BOMB    = "💣";
+
+  let W = 0, H = 0;
+  let basketX = 0;            // 中心X
+  const BASKET_W = 70;        // 当たり判定の幅
+  let items = [];            // {el, x, y, vy, type, emoji, r}
+  let score = 0, lives = 3, level = 1;
+  let running = false;
+  let spawnTimer = 0, spawnInterval = 900;
+  let lastTime = 0;
+  let rafId = null;
+
+  // --- サウンド（Web Audio・ファイル不要） ---
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  }
+  function beep(freq, dur, type, vol) {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = type || "sine";
+    osc.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(vol || 0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(t); osc.stop(t + dur);
+  }
+  function sndCatch()  { beep(880, 0.12, "triangle", 0.2); setTimeout(()=>beep(1320,0.12,"triangle",0.18),60); }
+  function sndGold()   { [660,880,1100,1320].forEach((f,i)=>setTimeout(()=>beep(f,0.14,"square",0.16),i*70)); }
+  function sndBomb()   { beep(140,0.35,"sawtooth",0.25); }
+  function sndMiss()   { beep(300,0.2,"sine",0.15); }
+  function sndGameOver(){ [440,330,220].forEach((f,i)=>setTimeout(()=>beep(f,0.3,"triangle",0.2),i*180)); }
+
+  // --- 雲をちりばめる ---
+  function makeClouds() {
+    const emojis = ["☁️","⛅","🌸","🦋"];
+    for (let i = 0; i < 5; i++) {
+      const c = document.createElement("div");
+      c.className = "cloud";
+      c.textContent = emojis[i % emojis.length];
+      c.style.top = (8 + Math.random() * 55) + "%";
+      c.style.animationDuration = (14 + Math.random() * 14) + "s";
+      c.style.animationDelay = (-Math.random() * 20) + "s";
+      c.style.fontSize = (28 + Math.random() * 24) + "px";
+      game.appendChild(c);
+    }
+  }
+
+  function resize() {
+    const r = game.getBoundingClientRect();
+    W = r.width; H = r.height;
+    if (basketX === 0) basketX = W / 2;
+    basketX = Math.max(BASKET_W/2, Math.min(W - BASKET_W/2, basketX));
+    placeBasket();
+  }
+  function placeBasket() { basket.style.left = basketX + "px"; }
+
+  // --- 入力 ---
+  function pointerMove(clientX) {
+    const r = game.getBoundingClientRect();
+    basketX = clientX - r.left;
+    basketX = Math.max(BASKET_W/2, Math.min(W - BASKET_W/2, basketX));
+    placeBasket();
+  }
+  game.addEventListener("pointerdown", e => { ensureAudio(); pointerMove(e.clientX); });
+  game.addEventListener("pointermove", e => { if (e.buttons || e.pointerType === "touch") pointerMove(e.clientX); });
+
+  let keyLeft = false, keyRight = false;
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft")  keyLeft = true;
+    if (e.key === "ArrowRight") keyRight = true;
+    if ((e.key === " " || e.key === "Enter")) {
+      if (!running && !overScreen.classList.contains("hidden")) startGame();
+      else if (!running && !startScreen.classList.contains("hidden")) startGame();
+    }
+  });
+  document.addEventListener("keyup", e => {
+    if (e.key === "ArrowLeft")  keyLeft = false;
+    if (e.key === "ArrowRight") keyRight = false;
+  });
+
+  // --- アイテム生成 ---
+  function spawnItem() {
+    const roll = Math.random();
+    let type, emoji;
+    // レベルが上がると ばくだん 増加
+    const bombChance = Math.min(0.10 + level * 0.025, 0.32);
+    if (roll < bombChance)        { type = "bomb";  emoji = BOMB; }
+    else if (roll < bombChance + 0.06) { type = "gold"; emoji = GOLD; }
+    else { type = "good"; emoji = GOODIES[(Math.random()*GOODIES.length)|0]; }
+
+    const el = document.createElement("div");
+    el.className = "item";
+    el.textContent = emoji;
+    const x = 24 + Math.random() * (W - 48);
+    el.style.left = x + "px";
+    el.style.top = "-50px";
+    game.appendChild(el);
+
+    const baseSpeed = 0.12 + level * 0.022;
+    items.push({
+      el, x, y: -50,
+      vy: (baseSpeed + Math.random() * 0.06) * H,  // px/s
+      type, emoji, r: 26
+    });
+  }
+
+  function popText(x, y, text, color) {
+    const p = document.createElement("div");
+    p.className = "pop";
+    p.textContent = text;
+    p.style.left = x + "px";
+    p.style.top = y + "px";
+    p.style.color = color;
+    game.appendChild(p);
+    setTimeout(() => p.remove(), 800);
+  }
+
+  function updateHUD() {
+    scoreEl.textContent = score;
+    levelEl.textContent = level;
+    heartsEl.textContent = lives > 0 ? "❤️".repeat(lives) : "💔";
+  }
+
+  function loseLife() {
+    lives--;
+    updateHUD();
+    game.classList.remove("shake");
+    void game.offsetWidth;
+    game.classList.add("shake");
+    if (lives <= 0) endGame();
+  }
+
+  // --- メインループ ---
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    // キーボード移動
+    const kbSpeed = 480 * dt;
+    if (keyLeft)  basketX -= kbSpeed;
+    if (keyRight) basketX += kbSpeed;
+    basketX = Math.max(BASKET_W/2, Math.min(W - BASKET_W/2, basketX));
+    placeBasket();
+
+    // スポーン
+    spawnTimer += dt * 1000;
+    if (spawnTimer >= spawnInterval) {
+      spawnTimer = 0;
+      spawnItem();
+    }
+
+    const catchY = H - 60;   // カゴの口の高さ
+
+    for (let i = items.length - 1; i >= 0; i--) {
+      const it = items[i];
+      it.y += it.vy * dt;
+      it.el.style.transform = "translateY(" + (it.y + 50) + "px)";
+
+      // キャッチ判定
+      if (it.y >= catchY - 20 && it.y <= catchY + 30) {
+        if (Math.abs(it.x - basketX) < BASKET_W/2 + 18) {
+          // キャッチ！
+          if (it.type === "bomb") {
+            sndBomb();
+            popText(it.x, catchY - 20, "💥", "#e85d82");
+            loseLife();
+          } else if (it.type === "gold") {
+            sndGold();
+            score += 50;
+            popText(it.x, catchY - 20, "+50✨", "#f5a623");
+          } else {
+            sndCatch();
+            score += 10;
+            popText(it.x, catchY - 20, "+10", "#e85d82");
+          }
+          updateHUD();
+          checkLevel();
+          it.el.remove();
+          items.splice(i, 1);
+          continue;
+        }
+      }
+
+      // 画面の下に落ちた
+      if (it.y > H + 40) {
+        if (it.type === "good" || it.type === "gold") {
+          // おやつを落としちゃった
+          sndMiss();
+          loseLife();
+        }
+        it.el.remove();
+        items.splice(i, 1);
+      }
+    }
+
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function checkLevel() {
+    const newLevel = 1 + Math.floor(score / 150);
+    if (newLevel > level) {
+      level = newLevel;
+      spawnInterval = Math.max(380, 900 - level * 55);
+      popText(W/2, H/2, "レベル " + level + "！", "#7b3fa0");
+      beep(523,0.1,"square",0.18);
+      setTimeout(()=>beep(784,0.15,"square",0.18),100);
+    }
+  }
+
+  // --- 状態遷移 ---
+  function clearItems() {
+    items.forEach(it => it.el.remove());
+    items = [];
+  }
+
+  function startGame() {
+    ensureAudio();
+    clearItems();
+    score = 0; lives = 3; level = 1;
+    spawnInterval = 900; spawnTimer = 0;
+    running = true;
+    updateHUD();
+    startScreen.classList.add("hidden");
+    overScreen.classList.add("hidden");
+    lastTime = performance.now();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function endGame() {
+    running = false;
+    cancelAnimationFrame(rafId);
+    clearItems();
+    sndGameOver();
+
+    let best = 0;
+    try { best = parseInt(localStorage.getItem("oyatsu_best") || "0", 10); } catch(e){}
+    if (score > best) { best = score; try { localStorage.setItem("oyatsu_best", String(best)); } catch(e){} }
+
+    document.getElementById("score-line").textContent = "スコア： " + score;
+    document.getElementById("best-line").textContent  = "ベスト： " + best;
+
+    const overEmoji = document.getElementById("overEmoji");
+    const praise = document.getElementById("praise");
+    if (score >= 500)      { overEmoji.textContent = "🏆"; praise.textContent = "すごーい！てんさい キャッチャー！"; }
+    else if (score >= 250) { overEmoji.textContent = "🌟"; praise.textContent = "とっても じょうず！"; }
+    else if (score >= 100) { overEmoji.textContent = "😊"; praise.textContent = "いい かんじ！"; }
+    else                   { overEmoji.textContent = "🥺"; praise.textContent = "つぎは もっと とれるよ！"; }
+
+    overScreen.classList.remove("hidden");
+  }
+
+  // --- 初期化 ---
+  startBtn.addEventListener("click", startGame);
+  againBtn.addEventListener("click", startGame);
+  window.addEventListener("resize", resize);
+
+  makeClouds();
+  resize();
+  updateHUD();
+})();
+</script>
+</body>
+</html>
